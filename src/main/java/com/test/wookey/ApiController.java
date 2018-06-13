@@ -1,5 +1,6 @@
 package com.test.wookey;
 
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -21,10 +22,12 @@ public class ApiController {
 		
 		BufferedImage image = imageService.createImage(file);
 		String fileName = file.getOriginalFilename() + "_test";
-		int width = 50;
-		int height = 50;
+		int width = 120;
+		int height = 120;
+		String path0 = "C:\\Users\\wookey\\Desktop\\test\\" + fileName + "_ver0" + ".png";
 		String path1 = "C:\\Users\\wookey\\Desktop\\test\\" + fileName + "_ver1" + ".png";
 		String path2 = "C:\\Users\\wookey\\Desktop\\test\\" + fileName + "_ver2" + ".png";
+		File resizeFileVer0 = imageService.scaleImage(image, width, height, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR, path0);
 		File resizeFileVer1 = imageService.resizeVer1(image, fileName, width, height, path1);
 		File resizeFileVer2 = imageService.resizeVer2(image, fileName, width, height, path2);
 		

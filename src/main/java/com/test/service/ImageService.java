@@ -1,12 +1,16 @@
 package com.test.service;
 
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.jws.WebParam.Mode;
 
 import org.imgscalr.Scalr;
 import org.springframework.stereotype.Service;
@@ -55,7 +59,7 @@ public class ImageService {
 		 * @param pixels
 		 *            : 이미지에서 검색된 RGB 픽셀을 유지하는 데 사용될 정수 배열
 		 * @param 0
-		 *            : 최초의 픽셀의 포함처의 배열에의 오프셋
+		 *            : 최초의 픽셀의 포함처의 배열에의 오프셋dd
 		 * @param pcWidth
 		 *            : 배열의 한 행의 픽셀에서 다음 행까지의 거리
 		 *
@@ -76,10 +80,39 @@ public class ImageService {
 	}
 
 	public File resizeVer2(BufferedImage image, String fileName, int pcWidth, int pcHeight, String path) throws IOException {
-		BufferedImage resizedImage = Scalr.resize(image, pcWidth, pcHeight, null);
+		BufferedImage resizedImage = Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_EXACT,  pcWidth, pcHeight, null);
 
 		File pcImageFile = new File(path);
 		ImageIO.write(resizedImage, "png", pcImageFile);
 		return pcImageFile;
 	}
+	
+	public File scaleImage(BufferedImage src,
+			int targetWidth, int targetHeight, Object interpolationHintValue, String path) throws IOException {
+		BufferedImage result = createOptimalImage(src, targetWidth,
+				targetHeight);
+		Graphics2D resultGraphics = result.createGraphics();
+
+		resultGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+				interpolationHintValue);
+		resultGraphics.drawImage(src, 0, 0, targetWidth, targetHeight, null);
+		resultGraphics.dispose();
+
+		File pcImageFile = new File(path);
+		ImageIO.write(result, "png", pcImageFile);
+		return pcImageFile;
+	}
+	
+	public BufferedImage createOptimalImage(BufferedImage src,
+			int width, int height) throws IllegalArgumentException {
+		if (width < 0 || height < 0)
+			throw new IllegalArgumentException("width [" + width
+					+ "] and height [" + height + "] must be >= 0");
+
+		return new BufferedImage(
+				width,
+				height,
+				(src.getTransparency() == Transparency.OPAQUE ? BufferedImage.TYPE_INT_RGB
+						: BufferedImage.TYPE_INT_ARGB));
+	}	
 }
