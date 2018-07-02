@@ -21,9 +21,9 @@ public class ApiController {
 		
 		BufferedImage image = imageService.createImage(file);
 		String fileName = file.getOriginalFilename() + "_test";
-		int width = 50;
-		int height = 50;
-		String path1 = "C:\\Users\\wookey\\Desktop\\test\\" + fileName + "_ver1" + ".png";
+		int width = 250;
+		int height = 250;
+		String path1 = "C:\\Users\\wookey\\Desktop\\test\\" + fileName + "_ver12" + ".png";
 		String path2 = "C:\\Users\\wookey\\Desktop\\test\\" + fileName + "_ver2" + ".png";
 		File resizeFileVer1 = imageService.resizeVer1(image, fileName, width, height, path1);
 		File resizeFileVer2 = imageService.resizeVer2(image, fileName, width, height, path2);
